@@ -448,8 +448,9 @@ shape: (8, 5)
 │ 7   ┆ 0.108093 ┆ 2022-12-08 00:00:00 ┆ null  ┆ X   │
 └─────┴──────────┴─────────────────────┴───────┴─────┘
 ```
-#### Link to joins in the Polars Book: link
-#### More information about joins in the Reference guide link
+
+#### Link to joins in the Polars Book: [link](https://pola-rs.github.io/polars-book/user-guide/howcani/combining_data/joining.html)
+#### More information about joins in the Reference guide [link](https://pola-rs.github.io/polars/py-polars/html/reference/dataframe/api/polars.DataFrame.join.html#polars.DataFrame.join)
 
 ### Concat
 ![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
@@ -482,8 +483,8 @@ shape: (8, 6)
 │ 7   ┆ 0.108093 ┆ 2022-12-08 00:00:00 ┆ null  ┆ 7   ┆ X   │
 └─────┴──────────┴─────────────────────┴───────┴─────┴─────┘
 ```
-#### Link to concatenation in the Polars Book: link
-#### More information about concatenation in the Reference guide link
+#### Link to concatenation in the Polars Book: [link](https://pola-rs.github.io/polars-book/user-guide/howcani/combining_data/concatenating.html)
+#### More information about concatenation in the Reference guide [link](https://pola-rs.github.io/polars/py-polars/html/reference/api/polars.concat.html#polars.concat)
 
 
 
