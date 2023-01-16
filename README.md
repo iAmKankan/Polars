@@ -7,8 +7,7 @@
 #### Functions
 * [File reading](https://github.com/iAmKankan/Polars/blob/main/file-reading.md)
 * [Expressions](https://github.com/iAmKankan/Polars/blob/main/expression.md)
-
-#### [Expressions and Combinations on DataFrames](https://github.com/iAmKankan/Polars/blob/main/expression.md)
+#### [_Expressions and Combinations on DataFrames_](https://github.com/iAmKankan/Polars/blob/main/expression.md)
 
 
 ## Polars
