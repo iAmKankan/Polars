@@ -142,7 +142,7 @@ shape: (8, 3)
 #### More on Polars expression book [link](https://pola-rs.github.io/polars-book/user-guide/dsl/expressions.html)
 
 ## Filter
-![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
+![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
 
 The filter option allows us to create a subset of the DataFrame. We use the same DataFrame as earlier and we filter between two specified dates.
 
@@ -193,7 +193,7 @@ shape: (2, 4)
 #### More about finter and condition [link](https://pola-rs.github.io/polars-book/user-guide/dsl/expressions.html#filter-and-conditionals)
 
 ## With_columns
-![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
+![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
 
 **with_colums** allows you to create new columns for you analyses. We create to new columns **e** and **b+42**. First we sum all values from column **b** and store the results in column **e**. After that we add **42** to the values of **b**. Creating a new column **b+42** to store these results.
 
@@ -228,6 +228,252 @@ shape: (8, 6)
 └─────┴──────────┴─────────────────────┴───────┴──────────┴───────────┘
 ```
 
+
+## Groupby
+![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
+
+We will create a new DataFrame for the **Groupby** functionality. This new DataFrame will include several 'groups' that we want to groupby.
+
+```Python
+df2 = pl.DataFrame({
+                    "x": np.arange(0, 8), 
+                    "y": ['A', 'A', 'A', 'B', 'B', 'C', 'X', 'X'],
+})
+
+print(df2)
+```
+```
+shape: (8, 2)
+┌─────┬─────┐
+│ x   ┆ y   │
+│ --- ┆ --- │
+│ i64 ┆ str │
+╞═════╪═════╡
+│ 0   ┆ A   │
+├╌╌╌╌╌┼╌╌╌╌╌┤
+│ 1   ┆ A   │
+├╌╌╌╌╌┼╌╌╌╌╌┤
+│ 2   ┆ A   │
+├╌╌╌╌╌┼╌╌╌╌╌┤
+│ 3   ┆ B   │
+├╌╌╌╌╌┼╌╌╌╌╌┤
+│ 4   ┆ B   │
+├╌╌╌╌╌┼╌╌╌╌╌┤
+│ 5   ┆ C   │
+├╌╌╌╌╌┼╌╌╌╌╌┤
+│ 6   ┆ X   │
+├╌╌╌╌╌┼╌╌╌╌╌┤
+│ 7   ┆ X   │
+└─────┴─────┘
+```
+```Python
+# without maintain_order you will get a random order back.
+df2.groupby("y", maintain_order=True).count()
+```
+```
+shape: (4, 2)
+┌─────┬───────┐
+│ y   ┆ count │
+│ --- ┆ ---   │
+│ str ┆ u32   │
+╞═════╪═══════╡
+│ A   ┆ 3     │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌┤
+│ B   ┆ 2     │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌┤
+│ C   ┆ 1     │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌┤
+│ X   ┆ 2     │
+└─────┴───────┘
+```
+```Python
+df2.groupby("y", maintain_order=True).agg([
+    pl.col("*").count().alias("count"),
+    pl.col("*").sum().alias("sum")
+])
+```
+```
+shape: (4, 3)
+┌─────┬───────┬─────┐
+│ y   ┆ count ┆ sum │
+│ --- ┆ ---   ┆ --- │
+│ str ┆ u32   ┆ i64 │
+╞═════╪═══════╪═════╡
+│ A   ┆ 3     ┆ 3   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ B   ┆ 2     ┆ 7   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ C   ┆ 1     ┆ 5   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ X   ┆ 2     ┆ 13  │
+└─────┴───────┴─────┘
+
+```
+
+#### More on groupby with expressions in the Polars Book: [link](https://pola-rs.github.io/polars-book/user-guide/dsl/groupby.html)
+
+## Combining operations
+![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
+
+Below are some examples on how to combine operations to create the DataFrame you require.
+
+```Python
+# create a new colum that multiplies column `a` and `b` from our DataFrame
+# select all the columns, but exclude column `c` and `d` from the final DataFrame
+
+df_x = df.with_column(
+    (pl.col("a") * pl.col("b")).alias("a * b")
+).select([
+    pl.all().exclude(['c', 'd'])
+])
+
+print(df_x)
+```
+```
+shape: (8, 3)
+┌─────┬──────────┬──────────┐
+│ a   ┆ b        ┆ a * b    │
+│ --- ┆ ---      ┆ ---      │
+│ i64 ┆ f64      ┆ f64      │
+╞═════╪══════════╪══════════╡
+│ 0   ┆ 0.220182 ┆ 0.0      │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 1   ┆ 0.750839 ┆ 0.750839 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 2   ┆ 0.634639 ┆ 1.269277 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 3   ┆ 0.67404  ┆ 2.022121 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 4   ┆ 0.102818 ┆ 0.41127  │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 5   ┆ 0.896408 ┆ 4.482038 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 6   ┆ 0.062943 ┆ 0.377657 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 7   ┆ 0.108093 ┆ 0.756653 │
+└─────┴──────────┴──────────┘
+```
+```Python
+# only excluding column `d` in this example
+
+df_y = df.with_columns([
+    (pl.col("a") * pl.col("b")).alias("a * b")
+]).select([
+    pl.all().exclude('d')
+])
+
+print(df_y)
+```
+```
+shape: (8, 4)
+┌─────┬──────────┬─────────────────────┬──────────┐
+│ a   ┆ b        ┆ c                   ┆ a * b    │
+│ --- ┆ ---      ┆ ---                 ┆ ---      │
+│ i64 ┆ f64      ┆ datetime[μs]        ┆ f64      │
+╞═════╪══════════╪═════════════════════╪══════════╡
+│ 0   ┆ 0.220182 ┆ 2022-12-01 00:00:00 ┆ 0.0      │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 1   ┆ 0.750839 ┆ 2022-12-02 00:00:00 ┆ 0.750839 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 2   ┆ 0.634639 ┆ 2022-12-03 00:00:00 ┆ 1.269277 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 3   ┆ 0.67404  ┆ 2022-12-04 00:00:00 ┆ 2.022121 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 4   ┆ 0.102818 ┆ 2022-12-05 00:00:00 ┆ 0.41127  │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 5   ┆ 0.896408 ┆ 2022-12-06 00:00:00 ┆ 4.482038 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 6   ┆ 0.062943 ┆ 2022-12-07 00:00:00 ┆ 0.377657 │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┤
+│ 7   ┆ 0.108093 ┆ 2022-12-08 00:00:00 ┆ 0.756653 │
+└─────┴──────────┴─────────────────────┴──────────┘
+```
+#### More oncontexts in expressions in the Polars Book: [link](https://pola-rs.github.io/polars-book/user-guide/dsl/contexts.html)
+
+## Combining dataframes
+![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
+
+### Join
+![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
+
+Let's have a closer look on how to join two DataFrames to a single DataFrame.
+
+
+df = pl.DataFrame({"a": np.arange(0, 8), 
+                   "b": np.random.rand(8), 
+                   "c": [datetime(2022, 12, 1) + timedelta(days=idx) for idx in range(8)],
+                   "d": [1, 2.0, np.NaN, np.NaN, 0, -5, -42, None]
+                  })
+
+df2 = pl.DataFrame({
+                    "x": np.arange(0, 8), 
+                    "y": ['A', 'A', 'A', 'B', 'B', 'C', 'X', 'X'],
+})
+Our two DataFrames both have an 'id'-like column: a and x. We can use those columns to join the DataFrames in this example.
+
+
+df.join(df2, left_on="a", right_on="x")
+
+shape: (8, 5)
+┌─────┬──────────┬─────────────────────┬───────┬─────┐
+│ a   ┆ b        ┆ c                   ┆ d     ┆ y   │
+│ --- ┆ ---      ┆ ---                 ┆ ---   ┆ --- │
+│ i64 ┆ f64      ┆ datetime[μs]        ┆ f64   ┆ str │
+╞═════╪══════════╪═════════════════════╪═══════╪═════╡
+│ 0   ┆ 0.220182 ┆ 2022-12-01 00:00:00 ┆ 1.0   ┆ A   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ 1   ┆ 0.750839 ┆ 2022-12-02 00:00:00 ┆ 2.0   ┆ A   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ 2   ┆ 0.634639 ┆ 2022-12-03 00:00:00 ┆ NaN   ┆ A   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ 3   ┆ 0.67404  ┆ 2022-12-04 00:00:00 ┆ NaN   ┆ B   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ 4   ┆ 0.102818 ┆ 2022-12-05 00:00:00 ┆ 0.0   ┆ B   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ 5   ┆ 0.896408 ┆ 2022-12-06 00:00:00 ┆ -5.0  ┆ C   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ 6   ┆ 0.062943 ┆ 2022-12-07 00:00:00 ┆ -42.0 ┆ X   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
+│ 7   ┆ 0.108093 ┆ 2022-12-08 00:00:00 ┆ null  ┆ X   │
+└─────┴──────────┴─────────────────────┴───────┴─────┘
+Additional information
+
+Link to joins in the Polars Book: link
+More information about joins in the Reference guide link
+
+### Concat
+![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
+We can also concatenate two DataFrames. Vertical concatenation will make the DataFrame longer. Horizontal concatenation will make the DataFrame wider. Below you can see the result of an horizontal concatenation of our two DataFrames.
+
+
+pl.concat([df,df2], how="horizontal")
+
+shape: (8, 6)
+┌─────┬──────────┬─────────────────────┬───────┬─────┬─────┐
+│ a   ┆ b        ┆ c                   ┆ d     ┆ x   ┆ y   │
+│ --- ┆ ---      ┆ ---                 ┆ ---   ┆ --- ┆ --- │
+│ i64 ┆ f64      ┆ datetime[μs]        ┆ f64   ┆ i64 ┆ str │
+╞═════╪══════════╪═════════════════════╪═══════╪═════╪═════╡
+│ 0   ┆ 0.220182 ┆ 2022-12-01 00:00:00 ┆ 1.0   ┆ 0   ┆ A   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┼╌╌╌╌╌┤
+│ 1   ┆ 0.750839 ┆ 2022-12-02 00:00:00 ┆ 2.0   ┆ 1   ┆ A   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┼╌╌╌╌╌┤
+│ 2   ┆ 0.634639 ┆ 2022-12-03 00:00:00 ┆ NaN   ┆ 2   ┆ A   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┼╌╌╌╌╌┤
+│ 3   ┆ 0.67404  ┆ 2022-12-04 00:00:00 ┆ NaN   ┆ 3   ┆ B   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┼╌╌╌╌╌┤
+│ 4   ┆ 0.102818 ┆ 2022-12-05 00:00:00 ┆ 0.0   ┆ 4   ┆ B   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┼╌╌╌╌╌┤
+│ 5   ┆ 0.896408 ┆ 2022-12-06 00:00:00 ┆ -5.0  ┆ 5   ┆ C   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┼╌╌╌╌╌┤
+│ 6   ┆ 0.062943 ┆ 2022-12-07 00:00:00 ┆ -42.0 ┆ 6   ┆ X   │
+├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┼╌╌╌╌╌┤
+│ 7   ┆ 0.108093 ┆ 2022-12-08 00:00:00 ┆ null  ┆ 7   ┆ X   │
+└─────┴──────────┴─────────────────────┴───────┴─────┴─────┘
+Additional information
+
+Link to concatenation in the Polars Book: link
+More information about concatenation in the Reference guide link
 
 
 
