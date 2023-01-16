@@ -1,6 +1,13 @@
 ## Index 
 ![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
 ![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
+#### [Polars installation](https://github.com/iAmKankan/Polars/edit/main/README.md#installetion-and-import)
+#### [Polars ***Series*** and ***DataFrame***](https://github.com/iAmKankan/Polars#gyanas-on-polars-series-and-dataframe)
+#### Functions
+* [File reading](https://github.com/iAmKankan/Polars/blob/main/file-reading.md)
+* [Expressions](https://github.com/iAmKankan/Polars/blob/main/expression.md)
+
+
 
 
 ## Polars
@@ -72,7 +79,64 @@ Creating a simple **Series** or **Dataframe** is easy and very familiar to other
 
 You can create a **Series** in Polars by providing a **list** or a **tuple**.
 
+```Python
+# with a tuple
+series = pl.Series("a", [1, 2, 3, 4, 5])
 
+print(series)
+```
+```
+shape: (5,)
+Series: 'a' [i64]
+[
+	1
+	2
+	3
+	4
+	5
+]
+```
+```Python
+# with a list
+series = pl.Series([1, 2, 3, 4, 5])
+
+print(series)
+```
+```
+shape: (5,)
+Series: '' [i64]
+[
+	1
+	2
+	3
+	4
+	5
+]
+```
+#### A DataFrame is created from a _dict_ or a collection of _dicts_.
+```Python
+dataframe = pl.DataFrame({"integer": [1, 2, 3], 
+                          "date": [
+                              (datetime(2022, 1, 1)), 
+                              (datetime(2022, 1, 2)), 
+                              (datetime(2022, 1, 3))
+                          ], 
+                          "float":[4.0, 5.0, 6.0]})
+
+print(dataframe)
+```
+```
+shape: (3, 3)
+┌─────────┬─────────────────────┬───────┐
+│ integer ┆ date                ┆ float │
+│ ---     ┆ ---                 ┆ ---   │
+│ i64     ┆ datetime[μs]        ┆ f64   │
+╞═════════╪═════════════════════╪═══════╡
+│ 1       ┆ 2022-01-01 00:00:00 ┆ 4.0   │
+│ 2       ┆ 2022-01-02 00:00:00 ┆ 5.0   │
+│ 3       ┆ 2022-01-03 00:00:00 ┆ 6.0   │
+└─────────┴─────────────────────┴───────┘
+```
 
 ## Gyanas on Polars ***Series*** and ***DataFrame***
 ![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
