@@ -1,7 +1,8 @@
 ## Index 
 ![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
 ![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
-#### [Polars installation](https://github.com/iAmKankan/Polars/edit/main/README.md#installetion-and-import)
+#### [Polars installation](#installetion-and-import)
+#### [Polars Object](#object-creation)
 #### [Polars ***Series*** and ***DataFrame***](https://github.com/iAmKankan/Polars#gyanas-on-polars-series-and-dataframe)
 #### Functions
 * [File reading](https://github.com/iAmKankan/Polars/blob/main/file-reading.md)
@@ -77,7 +78,7 @@ import numpy as np
 
 Creating a simple **Series** or **Dataframe** is easy and very familiar to other packages.
 
-You can create a **Series** in Polars by providing a **list** or a **tuple**.
+#### Create object with **Series** in Polars by providing a **list** or a **tuple**.
 
 ```Python
 # with a tuple
