@@ -33,7 +33,12 @@ In lazy Polars we are able to do query optimization on the entire query, further
 
 Polars keeps track of your query in a logical plan. This plan is optimized and reordered before running it. When a result is requested, Polars distributes the available work to different executors that use the algorithms available in the eager API to produce a result. Because the whole query context is known to the optimizer and executors of the logical plan, processes dependent on separate data sources can be parallelized on the fly.
 
+### Difference with pandas
+![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
 
+|Pandas|Polars|
+|:-----|:-----|
+|Indexing in _DF_| No Indexing in _DF_|
 
 ## References 
 ![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
