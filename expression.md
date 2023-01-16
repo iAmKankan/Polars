@@ -6,6 +6,14 @@
 * select
 * filter
 * with_columns
+* Groupby
+* Combining operations
+
+## Combining dataframes
+![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
+
+* Join
+* Concat
 
 ## Select statement
 ![dark](https://user-images.githubusercontent.com/12748752/212648966-d8f080dc-5022-41f0-a571-90f5d9aef139.png)
