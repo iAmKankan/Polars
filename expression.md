@@ -398,7 +398,7 @@ shape: (8, 4)
 
 Let's have a closer look on how to join two DataFrames to a single DataFrame.
 
-
+```Python
 df = pl.DataFrame({"a": np.arange(0, 8), 
                    "b": np.random.rand(8), 
                    "c": [datetime(2022, 12, 1) + timedelta(days=idx) for idx in range(8)],
@@ -409,11 +409,14 @@ df2 = pl.DataFrame({
                     "x": np.arange(0, 8), 
                     "y": ['A', 'A', 'A', 'B', 'B', 'C', 'X', 'X'],
 })
+```
+
 Our two DataFrames both have an 'id'-like column: a and x. We can use those columns to join the DataFrames in this example.
 
-
+```Python
 df.join(df2, left_on="a", right_on="x")
-
+```
+```
 shape: (8, 5)
 ┌─────┬──────────┬─────────────────────┬───────┬─────┐
 │ a   ┆ b        ┆ c                   ┆ d     ┆ y   │
@@ -436,18 +439,18 @@ shape: (8, 5)
 ├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┤
 │ 7   ┆ 0.108093 ┆ 2022-12-08 00:00:00 ┆ null  ┆ X   │
 └─────┴──────────┴─────────────────────┴───────┴─────┘
-Additional information
-
-Link to joins in the Polars Book: link
-More information about joins in the Reference guide link
+```
+#### Link to joins in the Polars Book: link
+#### More information about joins in the Reference guide link
 
 ### Concat
 ![light](https://user-images.githubusercontent.com/12748752/212648973-a46457e4-8150-42e8-929a-e422a9ed5962.png)
 We can also concatenate two DataFrames. Vertical concatenation will make the DataFrame longer. Horizontal concatenation will make the DataFrame wider. Below you can see the result of an horizontal concatenation of our two DataFrames.
 
-
+```Python
 pl.concat([df,df2], how="horizontal")
-
+```
+```
 shape: (8, 6)
 ┌─────┬──────────┬─────────────────────┬───────┬─────┬─────┐
 │ a   ┆ b        ┆ c                   ┆ d     ┆ x   ┆ y   │
@@ -470,13 +473,12 @@ shape: (8, 6)
 ├╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┼╌╌╌╌╌╌╌┼╌╌╌╌╌┼╌╌╌╌╌┤
 │ 7   ┆ 0.108093 ┆ 2022-12-08 00:00:00 ┆ null  ┆ 7   ┆ X   │
 └─────┴──────────┴─────────────────────┴───────┴─────┴─────┘
-Additional information
-
-Link to concatenation in the Polars Book: link
-More information about concatenation in the Reference guide link
-
+```
+#### Link to concatenation in the Polars Book: link
+#### More information about concatenation in the Reference guide link
 
 
 
+               
 
 
